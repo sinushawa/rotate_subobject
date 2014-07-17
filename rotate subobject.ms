@@ -21,10 +21,12 @@ if (val.x<0 OR val.y<0 OR val.z<0) do
 	angleR=-angleR
 )
 vertSelected = polyop.getVertSelection selection[1]
-
-for i in $ do
+vertArray = vertSelected as array
+Poses = #()
+for i in vertArray do
 (
-	pivotPoint=abis
-	rotate i (xformMat ((eulerangles 0 0 -angleR) as matrix3) viewsys).rotationpart
-	polyop.setVert selection[1] verticesID verticesPos node:selection[1]
+	vertPos = polyop.getVert selection[1] i
+	newPos = ((vertPos-abis) * (xformMat ((eulerangles 0 0 angleR) as matrix3) viewsys).rotationpart) + abis
+	append Poses newPos
 )
+polyop.setVert selection[1] vertSelected Poses
